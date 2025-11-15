@@ -1,0 +1,19 @@
+# dependencias
+node_modules/
+
+# autenticacao do whatsapp
+auth/
+
+# logs
+*.log
+
+# ambiente
+.env
+
+# sistema
+.DS_Store
+Thumbs.db
+
+# ide
+.vscode/
+.idea/
