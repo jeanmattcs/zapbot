@@ -1,39 +1,136 @@
-# ZapBot - WhatsApp Bot com Baileys
+# ZapBot
 
 [![Status](https://img.shields.io/badge/Status-Em%20Desenvolvimento-F59E0B?style=for-the-badge)](#status-do-projeto)
-[![Roadmap](https://img.shields.io/badge/Roadmap-Ativo-0A66C2?style=for-the-badge)](#roadmap)
-[![Contribuições](https://img.shields.io/badge/Contribui%C3%A7%C3%B5es-Bem--vindas-22C55E?style=for-the-badge)](#roadmap)
-
-[![ZapBot Banner](https://capsule-render.vercel.app/api?type=waving&height=180&text=ZapBot&fontSize=48&fontAlignY=35&desc=WhatsApp%20automation%20engine%20in%20progress&descAlignY=55&fontColor=f8fafc&color=0:0f172a,100:1e293b)](https://github.com/jeanmattcs/zapbot)
-
-[![Node.js](https://img.shields.io/badge/Node.js-18%2B-3C873A?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![Baileys](https://img.shields.io/badge/Baileys-6.7.21-25D366?style=for-the-badge)](https://github.com/WhiskeySockets/Baileys)
-[![Pino](https://img.shields.io/badge/Pino-10.3.1-1E293B?style=for-the-badge)](https://getpino.io/)
+[![Architecture](https://img.shields.io/badge/Architecture-Refactoring-0A66C2?style=for-the-badge)](#arquitetura-atual)
 [![License: ISC](https://img.shields.io/badge/License-ISC-0A66C2?style=for-the-badge)](LICENSE)
 
-Bot de WhatsApp em Node.js com autenticação por QR Code, reconexão automática e base pronta para automações.
+Bot de WhatsApp em Node.js com `@whiskeysockets/baileys`, focado em uma arquitetura mais organizada para conexao, reconexao e evolucao futura para automacoes.
 
 ## Status do Projeto
 
 ```txt
-Estágio atual: MVP funcional
-Saúde do projeto: Evolução ativa
-Prioridade atual: Estabilizar reconexão + iniciar camada de comandos
+Estagio atual: refactor arquitetural inicial
+Fase atual: etapas 1 e 2 concluidas
+Prioridade atual: consolidar base de conexao antes das proximas camadas (ainda em fases de testes)
 ```
 
-### O que já está pronto
+## O que existe hoje
 
-- Conexão WhatsApp com QR Code
-- Persistência de sessão local (`auth/`)
-- Reconexão automática com limite de tentativas
-- Estrutura base para envio e recebimento de mensagens
+- `AppBootstrap` para centralizar startup e shutdown da aplicacao
+- `WhatsAppConnectionManager` como dono exclusivo da conexao com o WhatsApp
+- maquina de estados explicita para o ciclo de conexao
+- reconexao com backoff exponencial e jitter
+- configuracao centralizada para ambiente e parametros de conexao
+- logs estruturados com `pino`
+- compatibilidade mantida com `src/services/whatsapp.service.js`
+- autenticacao por QR Code
+- persistencia de sessao local em `auth/` com `useMultiFileAuthState`
 
-## Visão Geral
+## Arquitetura Atual
 
-- Conexão via `@whiskeysockets/baileys`
-- Sessão persistida em `auth/`
-- Reconexão controlada com limite de tentativas
-- Estrutura simples para evoluir respostas automáticas
+```txt
+src/index.js
+  -> AppBootstrap
+      -> Logger
+      -> WhatsAppConnectionManager
+```
+
+### Componentes
+
+- `AppBootstrap`
+  Responsavel por inicializar a aplicacao, registrar sinais do processo e coordenar o encerramento.
+
+- `WhatsAppConnectionManager`
+  Responsavel por criar o socket Baileys, controlar reconexao, receber eventos de conexao e processar mensagens recebidas.
+
+- `Logger`
+  Logger estruturado com `pino`, configurado por ambiente.
+
+## Maquina de Estados da Conexao
+
+Estados implementados:
+
+- `idle`
+- `connecting`
+- `qr_waiting`
+- `connected`
+- `reconnecting`
+- `logged_out`
+- `failed`
+- `shutting_down`
+
+Fluxo resumido:
+
+```mermaid
+flowchart TD
+    A[idle] --> B[connecting]
+    B --> C[qr_waiting]
+    B --> D[connected]
+    B --> E[reconnecting]
+    C --> D
+    D --> E
+    D --> F[logged_out]
+    E --> B
+    E --> F
+    E --> G[failed]
+    A --> H[shutting_down]
+    B --> H
+    C --> H
+    D --> H
+    E --> H
+```
+
+## Estrutura do Projeto
+
+```txt
+zapbot/
+├── src/
+│   ├── app/
+│   │   └── app-bootstrap.js
+│   ├── config/
+│   │   ├── app.config.js
+│   │   └── whatsapp.config.js
+│   ├── observability/
+│   │   └── logger.js
+│   ├── services/
+│   │   └── whatsapp.service.js
+│   ├── whatsapp/
+│   │   ├── connection-state.js
+│   │   └── whatsapp-connection-manager.js
+│   └── index.js
+├── auth/
+├── package.json
+└── README.md
+```
+
+## Configuracao
+
+Arquivo principal: `src/config/app.config.js`
+
+Variaveis suportadas:
+
+- `NODE_ENV`: ambiente da aplicacao
+- `LOG_LEVEL`: nivel do logger
+- `SESSION_NAME`: nome da sessao do WhatsApp
+- `RECONNECT_MAX_RETRIES`: maximo de tentativas de reconexao
+- `RECONNECT_BASE_DELAY_MS`: delay base para o backoff exponencial
+- `RECONNECT_MAX_DELAY_MS`: delay maximo para reconexao
+
+## Como Rodar
+
+1. Instale as dependencias:
+
+```bash
+npm install
+```
+
+2. Inicie a aplicacao:
+
+```bash
+npm start
+```
+
+3. Escaneie o QR Code exibido no terminal.
 
 ## Stack
 
@@ -42,98 +139,78 @@ Prioridade atual: Estabilizar reconexão + iniciar camada de comandos
 - `pino`
 - `qrcode-terminal`
 
-## Estrutura do Projeto
+## Decisoes Arquiteturais Desta Fase
 
-```txt
-zapbot/
-├── src/
-│   ├── config/
-│   │   └── whatsapp.config.js
-│   ├── services/
-│   │   └── whatsapp.service.js
-│   └── index.js
-├── docs/
-│   └── modelo-logico.md
-├── auth/
-├── package.json
-└── README.md
-```
+- separar ciclo de vida da aplicacao do fluxo de conexao
+- tirar a responsabilidade de conexao de um servico monolitico
+- deixar os estados de conexao explicitos
+- evitar reconnect com delay fixo sempre igual
+- preparar a base para observabilidade e expansao futura
 
-## Fluxo da Conexão
+## Proximas Adicoes Possiveis
 
-```mermaid
-flowchart TD
-    A[Inicia app] --> B[Carrega auth state]
-    B --> C[Cria socket Baileys]
-    C --> D{QR recebido?}
-    D -- Sim --> E[Exibe QR no terminal]
-    D -- Nao --> F{Conexao aberta?}
-    E --> F
-    F -- Sim --> G[Bot conectado]
-    F -- Nao --> H[Conexao fechada]
-    H --> I{Pode reconectar?}
-    I -- Sim --> J[Agenda retry]
-    J --> B
-    I -- Nao --> K[Encerra processo]
-```
+As proximas etapas mais naturais para o projeto sao:
 
-## Como Rodar
+- `Health HTTP endpoint`
+  Expor estado atual da conexao para operacao local e futura execucao em servidor.
 
-1. Instale dependências:
-```bash
-npm install
-```
+- `QR artifact para servidor`
+  Persistir o QR em arquivo para facilitar autenticacao remota em Ubuntu.
 
-2. Inicie o bot:
-```bash
-npm start
-```
+- `SessionStore abstraido`
+  Sair do `useMultiFileAuthState` e preparar persistencia em SQLite ou outro storage.
 
-3. Escaneie o QR Code no terminal com o WhatsApp.
+- `OutboundQueue`
+  Criar fila de envio persistida para mensagens sairem mesmo apos oscilacao de conexao.
 
-## Configuração
+- `MessageNormalizer`
+  Transformar o evento bruto do Baileys em um formato interno estavel.
 
-Arquivo: `src/config/whatsapp.config.js`
+- `MessageRouter`
+  Separar o recebimento da mensagem da logica de comandos e automacoes.
 
-- `sessionName`: nome da sessão persistida
-- `qrcode.small`: tamanho do QR no terminal
-- `reconnect.maxRetries`: máximo de tentativas
-- `reconnect.retryDelay`: delay entre tentativas (ms)
+- `Health + observabilidade ampliada`
+  Incluir metricas, eventos estruturados e visao operacional mais forte.
 
-## Comandos
-
-- `npm start`: executa o bot
-
-## Próximos Passos
-
-- Implementar roteador de mensagens (comandos e intents)
-- Adicionar camada de logs estruturados por contexto
-- Criar testes para fluxo de reconexão
-- Integrar com banco/fila para automações
+- `Deploy para Ubuntu 24.04`
+  Documentar runtime com `systemd`, paths de dados e processo de operacao.
 
 ## Roadmap
 
-### v1.1 - Comandos e Respostas
+### v0.2 - Base Operacional
 
-- [ ] Comando `!ping`
-- [ ] Comando `!help`
-- [ ] Dispatcher por tipo de mensagem
-- [ ] Respostas automáticas por palavra-chave
+- [ ] adicionar endpoint de health
+- [ ] expor snapshot de conexao
+- [ ] persistir estado do QR para operacao remota
 
-### v1.2 - Observabilidade e Qualidade
+### v0.3 - Persistencia e Confiabilidade
 
-- [ ] Logs estruturados por request/message-id
-- [ ] Testes unitários para `WhatsAppService`
-- [ ] Testes de integração para reconexão
-- [ ] Tratamento de erros com códigos padronizados
+- [ ] introduzir `SessionStore`
+- [ ] mover sessao para SQLite
+- [ ] implementar `OutboundQueue`
 
-### v1.3 - Integrações
+### v0.4 - Camada de Mensagens
 
-- [ ] Persistência em banco (SQLite/Postgres)
-- [ ] Fila para processamento assíncrono
-- [ ] Webhook/API para gatilhos externos
-- [ ] Painel simples de status da conexão
+- [ ] criar `MessageNormalizer`
+- [ ] criar `MessageRouter`
+- [ ] implementar primeiros comandos
 
-## Licença
+### v0.5 - Operacao e Portfolio
+
+- [ ] documentar deploy em Ubuntu 25.04
+- [ ] adicionar diagrama de componentes
+- [ ] adicionar diagrama formal de transicao de estados
+- [ ] ampliar observabilidade
+
+## Objetivo de Evolucao
+
+O objetivo nao e apenas ter um bot que conecta, mas construir uma base tecnica que seja:
+
+- previsivel
+- testavel
+- operavel
+- facil de evoluir para automacoes reais
+
+## Licenca
 
 ISC. Veja [LICENSE](LICENSE).
