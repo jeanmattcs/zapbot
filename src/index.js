@@ -1,25 +1,14 @@
-const WhatsAppService = require('./services/whatsapp.service');
+const AppBootstrap = require('./app/app-bootstrap');
 
 async function main() {
-  console.log('='.repeat(50));
-  console.log(' Iniciando Bot WhatsApp');
-  console.log('='.repeat(50));
-  console.log();
-
-  const whatsapp = new WhatsAppService();
+  const app = new AppBootstrap();
 
   try {
-    await whatsapp.connect();
+    await app.start();
   } catch (error) {
-    console.error('Erro fatal:', error);
+    console.error('Erro fatal ao iniciar a aplicacao:', error);
     process.exit(1);
   }
-
-  process.on('SIGINT', async () => {
-    console.log('\n\nEncerrando aplicação...');
-    await whatsapp.disconnect();
-    process.exit(0);
-  });
 }
 
 main();
