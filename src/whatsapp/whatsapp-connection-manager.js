@@ -65,13 +65,37 @@ class WhatsAppConnectionManager {
         markOnlineOnConnect: false,
       });
 
+      const activeSocket = this.sock;
+
       this.sock.ev.on('connection.update', async (update) => {
+        // NAO MEXA AQUI: esse check evita que evento atrasado de socket antigo
+        // sobrescreva o estado do socket novo durante reconnect.
+        // Parece redundante, mas sem isso aparecem bugs bem estranhos e dificeis de reproduzir.
+        // Se for mexer, teste reconexao forcada antes, tipo desligar a internet.
+        // agradeco a compreensao e paciencia, se vc tiver alguma sugestao de como resolver me fale <3
+        // por enquanto, o jeito mais facil de resolver eh com esse if simples, eh feio mas funciona bem.
+        if (this.sock !== activeSocket) {
+          return;
+        }
+
         await this.handleConnectionUpdate(update);
       });
 
-      this.sock.ev.on('creds.update', saveCreds);
+      this.sock.ev.on('creds.update', async () => {
+        if (this.sock !== activeSocket) {
+          return;
+        }
+
+        await saveCreds();
+      });
 
       this.sock.ev.on('messages.upsert', async (messageEvent) => {
+        // MESMO MOTIVO DO CHECK DE CONNECTION.UPDATE: 
+        // evitar que mensagens de socket antigo sejam processadas por socket novo durante reconnect.
+        if (this.sock !== activeSocket) {
+          return;
+        }
+
         await this.handleMessages(messageEvent);
       });
 
