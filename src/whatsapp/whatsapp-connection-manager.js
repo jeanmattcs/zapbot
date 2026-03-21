@@ -6,6 +6,7 @@ const {
 } = require('@whiskeysockets/baileys');
 const qrcode = require('qrcode-terminal');
 const ConnectionState = require('./connection-state');
+const { normalizeMessage } = require('./normalize-message');
 
 class WhatsAppConnectionManager {
   constructor({ config, logger }) {
@@ -180,18 +181,14 @@ class WhatsAppConnectionManager {
       if (!message?.key || message.key.fromMe || messageEvent.type !== 'notify') {
         return;
       }
+      const normalized = normalizeMessage(message);
 
-      const from = message.key.remoteJid;
-      const messageText =
-        message.message?.conversation ||
-        message.message?.extendedTextMessage?.text ||
-        '';
 
       this.logger.info(
         {
-          jid: from,
-          messageId: message.key.id,
-          text: messageText,
+          jid: normalized.from,
+          text: normalized.text,
+          type: normalized.type,
         },
         'Mensagem recebida'
       );

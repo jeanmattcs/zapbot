@@ -1,4 +1,4 @@
-function GetMensagemText(message){ 
+function GetMessageText(message){ 
     if(message.message?.conversation){
         return message.message.conversation;
     }
@@ -13,5 +13,5 @@ function GetMensagemText(message){
     }
 }
     module.exports = {
-        GetMensagemText
+        GetMessageText
 };
