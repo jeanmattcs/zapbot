@@ -1,13 +1,8 @@
-const { GetMensagemText } = require('./src/whatsapp/menssagem-type');
- 
-// texto simples
-console.log(GetMensagemText({
-  message: { conversation: 'oi' }
-}));
-// esperado: 'oi'
- 
-// sem texto
-console.log(GetMensagemText({
-  message: { audioMessage: {} }
-}));
-// esperado: null
+const { normalizeMessage } = require('./src/whatsapp/normalize-message');
+
+const cachorro =  normalizeMessage({
+  key: {remoteJid : '5519999999999@s.whatsapp.net' },
+  message : { conversation: "suave bb"}
+
+})
+console.log(cachorro)
