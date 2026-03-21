@@ -52,7 +52,6 @@ O projeto está em desenvolvimento ativo. O foco atual está na consolidação d
 
 ### v0.2 — Base Operacional
 - Endpoint HTTP de health (`/health`) expondo o estado atual da conexão
-- Persistência do QR Code em arquivo para facilitar autenticação em ambientes remotos
 - Snapshot do estado de conexão acessível externamente
 
 ### v0.3 — Persistência e Confiabilidade
