@@ -30,7 +30,7 @@ O projeto está em desenvolvimento ativo. O foco atual está na consolidação d
 | Reconexão com backoff exponencial | ✅ Concluído |
 | Logger estruturado | ✅ Concluído |
 | Health endpoint HTTP | 🔜 Planejado |
-| Normalização de mensagens | 🔜 Planejado |
+| Normalização de mensagens | ✅ Concluído |
 | Roteamento e comandos | 🔜 Planejado |
 | Persistência de sessão em banco | 🔜 Planejado |
 
