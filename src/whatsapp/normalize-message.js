@@ -1,19 +1,14 @@
-const { GetMensagemText } = require('./menssagem-type');
-
+const { GetMessageText } = require('./message-text');
+const { getMessageType } = require('./message-type');
 
 function normalizeMessage(message){
-
-    const text = GetMensagemText(message)
+    const text = GetMessageText(message)
+    const type = getMessageType(message)
     const from = message.key.remoteJid
-
     return {
-        text, from 
+        text, type, from 
     }
-
-
-
 }
-
 module.exports = {
     normalizeMessage
 };
