@@ -1,5 +1,9 @@
 function getMessageType (message){
     const msg = message.message;
+    if (!msg){
+        return null;
+    }
+
     if (msg.conversation){
         return "text";
     }
@@ -15,9 +19,7 @@ function getMessageType (message){
     if (msg.stikerMessage){
         return "stiker";
     }
-    if (!msg){
-        return "unknown";
-    }
+
 } 
 module.exports = {
     getMessageType

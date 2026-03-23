@@ -1,7 +1,11 @@
-const {getMessageType} = require ('./src/whatsapp/messagetype')
-console.log(getMessageType({ message: { conversation: 'oi' } })) // 'text'
-console.log(getMessageType({ message: { imageMessage: {} } })) // 'image'
-console.log(getMessageType({ message: { audioMessage: {} } })) // 'audio'
-console.log(getMessageType({ message: {} })) // 'unknown'
+const {normalizeMessage} = require ('./src/whatsapp/normalize-message')
 
+const namorada = normalizeMessage({
+    message:{conversation: 'oi danado' }, 
+    key: { remoteJid: '5519999999999' }
+})
+const erro = normalizeMessage({ 
 
+})
+console.log(namorada) // cod certo 
+console.log(erro) // cod errado 
