@@ -11,17 +11,13 @@
 
 ## Visão Geral
 
-O ZapBot é uma aplicação Node.js que conecta ao WhatsApp via protocolo não-oficial usando a biblioteca [Baileys](https://github.com/WhiskeySockets/Baileys). O projeto não é uma biblioteca para instalar via `npm` — é um bot completo, pensado para ser clonado, executado e evoluído.
-
-O objetivo principal não é entregar um produto pronto, mas construir uma base técnica sólida: com ciclo de vida bem definido, estados de conexão explícitos, reconexão resiliente e uma estrutura que facilite a adição de novas funcionalidades sem quebrar o que já existe.
-
-O projeto também serve como laboratório prático para aprender arquitetura de software, organização de código, GitHub flow, abertura de issues e colaboração em projetos reais.
+ZapBot é um bot de WhatsApp escrito em Node.js. O foco do projeto é ter uma base sólida antes de qualquer funcionalidade... conexão estável, estados bem definidos e uma estrutura escalavel.
 
 ---
 
 ## Status do Projeto
 
-O projeto está em desenvolvimento ativo. O foco atual está na consolidação da base arquitetural — conexão, reconexão e organização do código — antes de expandir para funcionalidades de automação.
+O projeto está em desenvolvimento ativo. O foco atual está na consolidação da base arquitetural,, conexão, reconexão e organização do código antes de expandir para funcionalidades de automação.
 
 | Fase | Status |
 |---|---|
@@ -131,7 +127,7 @@ RECONNECT_BASE_DELAY_MS=2000
 RECONNECT_MAX_DELAY_MS=60000
 ```
 
-> **Atenção:** nunca comite o arquivo `auth/` no repositório. Ele contém as credenciais da sessão do WhatsApp. O `.gitignore` já está configurado para ignorá-lo.
+> **Atenção:** nunca commite o arquivo `auth/` no repositório. Ele contém as credenciais da sessão do WhatsApp. O `.gitignore` já está configurado para ignorá-lo.
 
 ---
 
@@ -141,9 +137,9 @@ RECONNECT_MAX_DELAY_MS=60000
 npm start
 ```
 
-Na primeira execução, um QR Code será exibido no terminal. Abra o WhatsApp no celular, vá em **Dispositivos vinculados** e escaneie o código.
+Na primeira execução, um QR Code será exibido no terminal. Abra o WhatsApp no celular, vá em **Dispositivos conectados** e escaneie o código.
 
-Após a autenticação, a sessão é salva localmente. Nas próximas execuções, o bot reconecta automaticamente sem precisar escanear o QR Code novamente.
+Após a autenticação, a sessão é salva localmente. Nas próximas execuções, o bot reconecta automaticamente sem precisar escanear o QR Code novamente...
 
 ---
 
