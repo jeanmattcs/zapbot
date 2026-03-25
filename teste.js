@@ -1,4 +1,4 @@
-import {normalizeMessage} from './src/whatsapp/normalize-message';
+import { normalizeMessage } from './src/whatsapp/normalize-message.js';
 
 const namorada = normalizeMessage({
     message:{conversation: 'oi danado' }, 

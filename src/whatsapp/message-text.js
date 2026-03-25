@@ -1,17 +1,11 @@
-function GetMessageText(message){ 
-    
-    if(message.message?.conversation){
-        return message.message.conversation;
-    }
-    if(message.message?.extendedTextMessage?.text){
-        return message.message.extendedTextMessage.text;
-    }
-    if(message.message?.imageMessage?.caption){
-        return message.message.imageMessage.caption;
-    }
-    if(message.message?.videoMessage?.caption){
-        return message.message.videoMessage.caption;
-    }
-}
+export function getMessageText(message) {
+  const msg = message?.message;
+  if (!msg) return null;
 
-export { GetMessageText };
+  if (msg.conversation) return msg.conversation;
+  if (msg.extendedTextMessage?.text) return msg.extendedTextMessage.text;
+  if (msg.imageMessage?.caption) return msg.imageMessage.caption;
+  if (msg.videoMessage?.caption) return msg.videoMessage.caption;
+
+  return null; // fallback importante
+}
