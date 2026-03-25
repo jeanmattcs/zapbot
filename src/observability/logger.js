@@ -1,4 +1,4 @@
-const pino = require('pino');
+import pino from 'pino';
 
 function createLogger(config) {
   return pino({
@@ -11,4 +11,4 @@ function createLogger(config) {
   });
 }
 
-module.exports = createLogger;
+export default createLogger;

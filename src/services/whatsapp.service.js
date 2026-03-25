@@ -1,3 +1,3 @@
-const WhatsAppConnectionManager = require('../whatsapp/whatsapp-connection-manager');
+import WhatsAppConnectionManager from'../whatsapp/whatsapp-connection-manager.js';
 
-module.exports = WhatsAppConnectionManager;
+export default WhatsAppConnectionManager;
