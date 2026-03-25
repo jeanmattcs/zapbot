@@ -1,19 +1,18 @@
-import { GetMessageText } from'./message-text';
-import { getMessageType } from'./message-type';
+import { getMessageText } from './message-text.js';
+import getMessageType from './message-type.js';
 
-function normalizeMessage(message){
-    const normalize = {
-    text : GetMessageText(message),
-    type : getMessageType(message),
-    from : message.key?.remoteJid 
+function normalizeMessage(message) {
+  const normalized = {
+    text: getMessageText(message),
+    type: getMessageType(message),
+    from: message.key?.remoteJid,
+  };
+
+  if (!normalized.type || !normalized.from) {
+    return null;
+  }
+
+  return normalized;
 }
 
-    if (!normalize.type || !normalize.from ){
-        return null; 
-    } 
-
-    return normalize
-}
-module.exports = {
-    normalizeMessage
-};
+export { normalizeMessage };
