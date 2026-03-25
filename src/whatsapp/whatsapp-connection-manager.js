@@ -291,4 +291,5 @@ class WhatsAppConnectionManager {
   }
 }
 
-module.exports = WhatsAppConnectionManager;
+
+export default WhatsAppConnectionManager;
