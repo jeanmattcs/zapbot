@@ -1,4 +1,4 @@
-module.exports = Object.freeze({
+export default Object.freeze({
   IDLE: 'idle',
   CONNECTING: 'connecting',
   QR_WAITING: 'qr_waiting',

@@ -1,12 +1,13 @@
-const {
-  default: makeWASocket,
+import {
+  default as makeWASocket,
   DisconnectReason,
   fetchLatestBaileysVersion,
   useMultiFileAuthState,
-} = require('@whiskeysockets/baileys');
-const qrcode = require('qrcode-terminal');
-const ConnectionState = require('./connection-state');
-const { normalizeMessage } = require('./normalize-message');
+} from '@whiskeysockets/baileys';
+
+import qrcode from 'qrcode-terminal';
+import ConnectionState from './connection-state.js';
+import { normalizeMessage } from './normalize-message.js';
 
 class WhatsAppConnectionManager {
   constructor({ config, logger }) {
@@ -69,12 +70,14 @@ class WhatsAppConnectionManager {
       const activeSocket = this.sock;
 
       this.sock.ev.on('connection.update', async (update) => {
-        // NAO MEXA AQUI: esse check evita que evento atrasado de socket antigo
-        // sobrescreva o estado do socket novo durante reconnect.
-        // Parece redundante, mas sem isso aparecem bugs bem estranhos e dificeis de reproduzir.
-        // Se for mexer, teste reconexao forcada antes, tipo desligar a internet.
-        // agradeco a compreensao e paciencia, se vc tiver alguma sugestao de como resolver me fale <3
-        // por enquanto, o jeito mais facil de resolver eh com esse if simples, eh feio mas funciona bem.
+        /*
+        NAO MEXA AQUI: esse check evita que evento atrasado de socket antigo
+        sobrescreva o estado do socket novo durante reconnect.
+        Parece redundante, mas sem isso aparecem bugs bem estranhos e dificeis de reproduzir.
+        Se for mexer, teste reconexao forcada antes, tipo desligar a internet.
+        agradeco a compreensao e paciencia, se vc tiver alguma sugestao de como resolver me fale <3
+        por enquanto, o jeito mais facil de resolver eh com esse if simples, eh feio mas funciona bem.
+        */
         
         if (this.sock !== activeSocket) {
           return;
@@ -189,8 +192,6 @@ class WhatsAppConnectionManager {
         return; 
     } 
         
-
-
       this.logger.info(
         {
           from: normalized.from,

@@ -1,6 +1,6 @@
-const appConfig = require('./app.config');
+import appConfig from './app.config.js';
 
-module.exports = {
+export default {
   sessionName: appConfig.whatsapp.sessionName,
   qrcode: appConfig.whatsapp.qrcode,
   reconnect: {

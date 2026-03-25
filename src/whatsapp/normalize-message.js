@@ -1,5 +1,5 @@
-const { GetMessageText } = require('./message-text');
-const { getMessageType } = require('./message-type');
+import { GetMessageText } from'./message-text';
+import { getMessageType } from'./message-type';
 
 function normalizeMessage(message){
     const normalize = {

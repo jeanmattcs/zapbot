@@ -1,4 +1,4 @@
-const AppBootstrap = require('./app/app-bootstrap');
+import AppBootstrap from'./app/app-bootstrap.js';
 
 async function main() {
   const app = new AppBootstrap();

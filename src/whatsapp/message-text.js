@@ -1,4 +1,5 @@
 function GetMessageText(message){ 
+    
     if(message.message?.conversation){
         return message.message.conversation;
     }
@@ -12,6 +13,5 @@ function GetMessageText(message){
         return message.message.videoMessage.caption;
     }
 }
-    module.exports = {
-        GetMessageText
-};
+
+export { GetMessageText };

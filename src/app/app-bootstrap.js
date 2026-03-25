@@ -1,6 +1,6 @@
-const appConfig = require('../config/app.config');
-const createLogger = require('../observability/logger');
-const WhatsAppConnectionManager = require('../whatsapp/whatsapp-connection-manager');
+import appConfig from'../config/app.config.js';
+import createLogger from'../observability/logger.js';
+import WhatsAppConnectionManager from'../whatsapp/whatsapp-connection-manager.js';
 
 class AppBootstrap {
   constructor() {
@@ -58,4 +58,4 @@ class AppBootstrap {
   }
 }
 
-module.exports = AppBootstrap;
+export default AppBootstrap;
