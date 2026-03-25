@@ -75,6 +75,7 @@ class WhatsAppConnectionManager {
         // Se for mexer, teste reconexao forcada antes, tipo desligar a internet.
         // agradeco a compreensao e paciencia, se vc tiver alguma sugestao de como resolver me fale <3
         // por enquanto, o jeito mais facil de resolver eh com esse if simples, eh feio mas funciona bem.
+        
         if (this.sock !== activeSocket) {
           return;
         }
@@ -183,10 +184,16 @@ class WhatsAppConnectionManager {
       }
       const normalized = normalizeMessage(message);
 
+       if (!normalized ){
+        console.warn("Ta ignorado pai")
+        return; 
+    } 
+        
+
 
       this.logger.info(
         {
-          jid: normalized.from,
+          from: normalized.from,
           text: normalized.text,
           type: normalized.type,
         },
